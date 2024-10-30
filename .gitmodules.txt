@@ -1,0 +1,3 @@
+[submodule "zgoulchess"]
+    path = zgoulchess
+    url = https://github.com/username/repo_name.git
