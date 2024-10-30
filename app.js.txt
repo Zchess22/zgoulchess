@@ -1,0 +1,46 @@
+// Αρχικοποίηση της βιβλιοθήκης chess.js για να παρακολουθούμε το παιχνίδι
+const game = new Chess();
+
+// Ρυθμίσεις για τη σκακιέρα
+const boardConfig = {
+    draggable: true, // Επιτρέπει στους χρήστες να μετακινούν τα πιόνια
+    position: 'start', // Αρχική θέση σκακιέρας
+    onDrop: handleMove, // Συνάρτηση που θα καλείται όταν γίνεται μία κίνηση
+};
+
+// Δημιουργία της σκακιέρας
+const board = Chessboard('chessboard', boardConfig);
+
+// Συνάρτηση που ελέγχει τη νομιμότητα μιας κίνησης και ενημερώνει τη σκακιέρα
+function handleMove(source, target) {
+    // Δοκιμή της κίνησης
+    const move = game.move({
+        from: source,
+        to: target,
+        promotion: 'q' // Αυτόματη προαγωγή σε βασίλισσα
+    });
+
+    // Αν η κίνηση δεν είναι έγκυρη, επαναφορά της σκακιέρας
+    if (move === null) return 'snapback';
+
+    // Έλεγχος αν το παιχνίδι έχει τελειώσει
+    updateGameStatus();
+}
+
+// Συνάρτηση που ελέγχει την κατάσταση του παιχνιδιού
+function updateGameStatus() {
+    if (game.in_checkmate()) {
+        alert('Ματ! Το παιχνίδι τελείωσε.');
+        board.position('start'); // Επαναφορά της σκακιέρας
+        game.reset();
+    } else if (game.in_draw()) {
+        alert('Ισοπαλία! Το παιχνίδι τελείωσε.');
+        board.position('start');
+        game.reset();
+    }
+}
+
+// Προσθήκη λειτουργίας στο κουμπί επαναφοράς
+document.getElementById('reset-button').addEventListener('click', () => {
+    game.reset();
+    board.position('start');
